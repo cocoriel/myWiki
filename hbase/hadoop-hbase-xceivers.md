@@ -223,7 +223,13 @@
 		- **hadoop fsck /hbase -openforwrite** : 해당 옵션을 통해 현재 쓰기를 위해 열려 있는 파일을 확인할 수 있다. 이를 **hadoop fsck /hbase -files -blocks** report와 비교해 보면 block에 해당하는 file을 알수 있고, thread 로그와의 비교를 통해서 해당 files에 access하고 있는 thread도 알 수 있다. 
 
  7. What does that all mean?
-	- 그래서 결국 xcievers는 몇개나 필요한걸까? 다음의 계산식은 오직 client로 오직 HBase만 사용하는 것을 가정한 경우고, mapreduce나 flume 등등을 사용한다면 추가로 고려해야 할 점들이 있다. 
-	- 
+	- 그래서 결국 xcievers는 몇개나 필요한걸까? 다음의 계산식은 오직 client로 오직 HBase만 사용하는 것을 가정한 경우고, mapreduce나 flume 등등을 사용한다면 xcievers의 값은 여기서 산출하는 값보다 커야 한다. 
+	- 수식 
+	$$
+	\#ofxcievers=\frac{(#ofActiveWriters*2)+(#ofActiveReaders)}{#ofDataNodes}
+	$$
+	- 이 수식에서 write operation을 위해서는 2개, read operation을 위해서 1개의 thread가 필요하다고 가정
+	-  홍홍
+	
 
 > Written with [StackEdit](https://stackedit.io/).
