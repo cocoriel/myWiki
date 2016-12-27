@@ -195,8 +195,35 @@
 	- DFSInputStream은 DFSClient.BlockReader라는 클래스를 instance로 가지고 있다. 이 클래스는 datanode로의 connection을 열고, stream이 block을 읽는다. block을 읽고 난 이후에는 connection이 close되게 됨.
 	- DFSOutputStream은 DataStreamer라는 helper 클래스를 가지고 있고, 이를 통해 server로의 connection을 tracking하게 된다. 
 	- block을 읽은 때나 쓸때 모두 그에 해당하는 thread 와 socket이 필요하고, client가 수행하고 있는 작업에 따라서 connection의 수가 바뀌는 것을 관찰할 수 있다. 
-	- 리전에서 connection의 수가 22까지 올라가지 않는 것은, region이 열려있는 동안에는 HFile의 info block만 읽으면 되기 때문이다.  
+	- 리전에서 connection의 수가 22까지 올라가지 않는 것은, region이 열려있는 동안에는 HFile의 info block만 읽으면 되기 때문이다.  결국 이로 인해 server-side의 resource를 재빨리 사용하고 반환할 수 있다. 
+	- datanod의 JStack dump를 통해 더욱 자세한 정보를 알 수 있다. 
+> "DataXceiver for client /127.0.0.1:64281 [sending block blk_5532741233443227208_4201]” daemon prio=5 tid=7fb96481d000 nid=0x1178b4000 runnable [1178b3000]    
+> java.lang.Thread.State: RUNNABLE    
+> ... 
+> "DataXceiver for client /127.0.0.1:64172 [receiving block blk_-2005512129579433420_4199  client=DFSClient_hb_rs_10.0.0.29,60020,1330984111693_1330984118810]” daemon prio=5 tid=7fb966109000 nid=0x1169cb000 runnable [1169ca000]   
+> java.lang.Thread.State: RUNNABLE    
+> …
 
+	- thread 사용
+		- DataXceiverServer daemon이 thread 1개 점유하고 있고, 이거는 위 dump의 2개 connection과도 연관이 있음. 결국 해당 daemon이 thread 3개 사용(dataXceiver for Client /172.0.01:64281 & dataXceiver for Client /172.0.01:64172) 
+		- 로그에서 thread 개수가 4로 보이는 것은 counter가 곧 소멸될 active thread의 개수를 세기 때문임. 
+		- 내부적으로 helper class인 PacketResponder 도 추가적으로 thread 하나를 점유함.
+> “PacketResponder 0 for Block blk_-2005512129579433420_4199” daemon
+> prio=5 tid=7fb96384d000 nid=0x116ace000 in Object.wait() [116acd000]  
+> java.lang.Thread.State: TIMED_WAITING (on object monitor)
+>      at java.lang.Object.wait(Native Method)
+>      at org.apache.hadoop.hdfs.server.datanode.BlockReceiver\$PacketResponder
+>        .lastDataNodeRun(BlockReceiver.java:779)
+>      – locked (a org.apache.hadoop.hdfs.server.datanode.BlockReceiver\$PacketResponder)
+>      at org.apache.hadoop.hdfs.server.datanode.BlockReceiver\$PacketResponder.run(BlockReceiver.java:870)
+>      at java.lang.Thread.run(Thread.java:680)
 
+		- 위의 로그에서 PacketResponder의 경우 상태가 TIME_WAIT이므로 thread counter에서는 위의 thread를 active thread로 취급하지 않음.
+		- 또 한가지 생각해 보아야 할건, client와 server 사이에 분리된 connection이나 socket이 필요하지 않다는 것이다.  
+		- **hadoop fsck /hbase -openforwrite** : 해당 옵션을 통해 현재 쓰기를 위해 열려 있는 파일을 확인할 수 있다. 이를 **hadoop fsck /hbase -files -blocks** report와 비교해 보면 block에 해당하는 file을 알수 있고, thread 로그와의 비교를 통해서 해당 files에 access하고 있는 thread도 알 수 있다. 
+
+ 7. What does that all mean?
+	- 그래서 결국 xcievers는 몇개나 필요한걸까? 다음의 계산식은 오직 client로 오직 HBase만 사용하는 것을 가정한 경우고, mapreduce나 flume 등등을 사용한다면 추가로 고려해야 할 점들이 있다. 
+	- 
 
 > Written with [StackEdit](https://stackedit.io/).
