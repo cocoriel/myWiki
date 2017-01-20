@@ -25,6 +25,7 @@
 	- total block수 증가 : 네임노드 모니터링을 통해 file & directory / blocks / total을 살펴본 결과, file & directory수에는 별 변화가 없지만 block의 수가 증가. 이로 인해 네임노드의 heap이 모자라서 namenode 다운됨. 
 	- pending deletion blocks :  네임노드 jmx를 통해서 pendingDeletionBlocks을 확인할 수 있는데, 네임노드가 invalide block을 계산하여 데이터노드를 통해 이를 삭제하는 속도보다 삭제해야 할 파일 수의 증가가 훨씬 빨라서 pendingDeletionBlock의 수가 지속적으로 증가함
 	- HDFS 재기동 지연 : 버그 패치 이후에 HDFS/HBase를 재기동 하는데 있어서 HDFS 기동 시 safe mode를 빠져나왔음에도 불구하고 데이터노드의 반응이 느려 HBase를 기동했을 시 HBase meta등의 파일을 제대로 읽어들이지 못함
+	- HBase read 속도 지연 : HBase의 read 속도가 느려짐
 
  4. 기타
 	 - 네임노드의 stateChange 로그를 통해 정상적인 block에 비해 비정상적인 block이 8배 정도 많이 생긴 것을 확인함
