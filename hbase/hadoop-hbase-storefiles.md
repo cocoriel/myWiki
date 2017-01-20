@@ -5,6 +5,7 @@
 	- [developer blog](http://gbif.blogspot.kr/2012/07/optimizing-writes-in-hbase.html)
 	- [hbase 설정 최적화](http://engineering.vcnc.co.kr/2013/04/hbase-configuration/) 
 	- [About HBase flushes and compactions](http://hadoop-hbase.blogspot.kr/2014/07/about-hbase-flushes-and-compactions.html)
+	- [compaction improvement](http://www.slideshare.net/cloudera/hbasecon-2013-compaction-improvements-in-apache-hbase)
 	- [HBASE-7465](https://issues.apache.org/jira/browse/HBASE-7465)
 
  2. HBase compaction 버그(0.94.16)
