@@ -1,4 +1,4 @@
-### HBase scan시 scanner lease expire 문제
+### HBase scan시 responseTooSlow 문제
 
 1. 참고사이트
 	- [stackoverflow1 - gc문제](http://stackoverflow.com/questions/25599434/hbase-have-no-response-to-client-for-minutes)
