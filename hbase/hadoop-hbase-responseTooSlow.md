@@ -8,6 +8,7 @@
 	- [비슷한 현상](http://git.net/ml/java-hadoop-hbase-user/2010-11/msg00142.html)
 	- [region server going down due to gc pauses](https://community.hortonworks.com/articles/73953/region-server-going-down-due-to-gc-pauses.html)
 	- [Java GC](http://www.reins.altervista.org/java/gc1.4.2_faq.html)
+	- [HBase port](http://blog.cloudera.com/blog/2013/07/guide-to-using-apache-hbase-ports/)
 
 2. 현상
 	- 배치 실행시에 scan을 통해 작업을 하는데 이 작업속도가 현저히 느려짐
@@ -18,13 +19,14 @@
 	- 배치 도는 시간동안 gc를 모니터링 해 보아야 할 듯함.. 
 
 3. 모니터링
-	- GC 로그 보니까 Permgen 영영에 대한 concurrent mode failure 가 생가보다 자주 일어나는데, 이 영역이 좀 모자라서 그러는거 아닌가 싶음...
+	- GC 로그 보니까 Permgen 영영에 대한 concurrent mode failure 가 생가보다 자주 일어나는데, 이걸 좀 올려줘야 하나...
 	- concurrent mode failure 일어나면 대략 10초 내외로 걸림..
 		- 그런데 생각해보면 10초면 zookeeper timeout이 나거나 하는 정도의 GC 시간은 아닌것 같은데..
 	- 그리고 minor GC가 아주 자주 일어남
 		- hbase니까 flush 된 부분에 대해 GC가 일어나는 것 같은데 이제 너무 잦은건가...
 		- minor GC에 대한거는 flush 때문인지 원래 GC가 나야하는 부분에 대해 나는건지 구분이 안가서 판단이 힘드네..
 		- jstat 상(3초에 한번)으로 보면 minor GC는 3초동안 4번 정도는 일어나는 것 같음..
+		- scan 할때 timeout이 있는데 hbase.client.scanner.timeout.period(default 60000ms), hbase.rpc.timeout(default 60000ms) 값 중에서 작은 쪽이 timeout 시간이 됨. 현재 클러스터는 rpc.timeout이 10분으로 지정되어 있고, scanner timeout은 없는데... 그럼 1분이 되버리는 건가?? 그러나 로그 상으로 scanner timeout에 대한 로그가 전혀 없음.
 
 
 
