@@ -3,6 +3,7 @@
 
 1. 참고 사이트
 	- [apache-hbase-region-splitting-and-merging](https://ko.hortonworks.com/blog/apache-hbase-region-splitting-and-merging/)
+	- [Capacity Planning and Region Sizing](http://archive-primary.cloudera.com/cdh5/cdh/5/hbase-0.98.1-cdh5.1.5/book/ops.capacity.html)
 
 2. split policy
 	- 0.94.16의 경우는 default로 constant size region split policy를 따름
