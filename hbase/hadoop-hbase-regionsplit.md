@@ -2,9 +2,9 @@
 ###hbase split
 
 1. 참고 사이트
-	- [hbase region(hortonworks)](https://ko.hortonworks.com/blog/apache-hbase-region-splitting-and-merging/)
+	- [apache-hbase-region-splitting-and-merging](https://ko.hortonworks.com/blog/apache-hbase-region-splitting-and-merging/)
 
-2. split polity
+2. split policy
 	- 0.94.16의 경우는 default로 constant size region split policy를 따름
 	- split 할때 다음과 같은 식에 의해 split size가 결정됨
 		- min(R^2*hbase.hregion.memstore.flush.size, hbase.hregion.max.filesize)
