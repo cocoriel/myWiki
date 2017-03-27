@@ -13,5 +13,8 @@
 		- dramatically low-latencies
 		- 보다 간단한 형식의 state management
 		- operation을 보다 쉽게
+	3. POC - Market Spread
+		- 실험결과 단일 머신(AWS m4 level, 16cores)에서 stream/sec 당 1.5 million messaged 처리 
+		- letency는 50%는 66 microseconds/99.9%는 0.5ms 안에 처리함 
 
 > Written with [StackEdit](https://stackedit.io/).
