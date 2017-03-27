@@ -3,7 +3,7 @@
 
 1. 사이트
 	- [Wallaroo 소개](http://engineering.sendence.com/2017/03/hello-wallaroo/)
-2. Wallaroo
+2. Wallaroo - 4월에 open-source 화 될 예정
 	1. 무엇
 		- event-by-event distributed data processing application을 위해 만들어진 framework
 		- high-throughput과 low-latency를 handling 하기 위해 design 됨
