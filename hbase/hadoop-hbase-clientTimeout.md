@@ -4,6 +4,7 @@
 1. 사이트
 	- [HBase Client Timeout](http://hadoop-hbase.blogspot.kr/2012/09/hbase-client-timeouts.html)
 	- [Long Running HBase Clients](http://hadoop-hbase.blogspot.kr/2011/12/long-running-hbase-clients.html)
+	- [zookeeper session expired](https://community.hortonworks.com/questions/11779/hbase-master-shutting-down-with-zookeeper-delete-f.html)
 2. 내용
 	1. 현상
 		- thrift서버에서 HBase scan시 scan 응답이 느리자 zookeeper와의 세션이 만료
